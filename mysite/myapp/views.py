@@ -27,14 +27,18 @@ def getvoice(request):
         audio_text = r.listen(source)
         print("Time over, thanks")
         try:
-            print("Text: "+r.recognize_google(audio_text))
-            sms = r.recognize_google(audio_text)
-            # client = genai.Client(api_key="AIzaSyBvTIhZ0ZfUn8-gIAddFchtyx-tvB5YkGY")
-            # response = client.models.generate_content(model="gemini-2.0-flash", contents=sms)
-            # chat = Chat.objects.create(question= sms, answer=response.text)
-            # print('success') 
+            print("Text: "+r.recognize_google(audio_text, language='my-MM'))
+            sms = r.recognize_google(audio_text,  language='my-MM')
+            
+            client = genai.Client(api_key="AIzaSyBvTIhZ0ZfUn8-gIAddFchtyx-tvB5YkGY")
+            response = client.models.generate_content(model="gemini-2.0-flash", contents=sms)
+            chat = Chat.objects.create(question= sms, answer=response.text)
+            print('success') 
+            
             return JsonResponse({'sms':sms})           
             
         except:
-            print("Sorry, I did not get that")
+            # print("Sorry, I did not get that")
+            sms = "Sorry, I did not get that"
+            return JsonResponse({'sms':sms}) 
     return JsonResponse({'status':'success'})
